@@ -39,7 +39,7 @@ async function check(chatId, repeat = true) {
           message += `    ${slot.hour}\n`
         }
       }
-      message += `Link: ${link}}\n`
+      message += `\n\nLink: ${link}\n`
     }
   } catch (e) {
     message += `An error ocurred: ${e.message}`
