@@ -52,6 +52,6 @@ bot.on('message', (msg) => {
 })
 
 // Start the check polling
-bot.onText(/^check/i, (msg) => {
+bot.onText(/^\/check/i, (msg) => {
   check(msg.chat.id, false)
 })
