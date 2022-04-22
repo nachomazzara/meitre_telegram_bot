@@ -1,5 +1,5 @@
 # Meitre Telegram bot
-Telegram's bot to be notified when places are available
+Telegram's bot to be notified when places are available on [meitre](https://meitre.com/en) reservation system.
 
 You will need to create a `.env` file with the same variables defined in `.env.example`
 
