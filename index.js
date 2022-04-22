@@ -7,6 +7,7 @@ const telegramToken = process.env.TELEGRAM_API_KEY
 const meitreId = process.env.MEITRE_ID
 const peopleAmount = process.env.PEOPLE_AMOUNT
 const type = process.env.TYPE
+const link = process.env.LINK
 const pollingTime = parseInt(process.env.POLLING_TIME)
 
 const bot = new TelegramBot(telegramToken, { polling: true })
@@ -38,6 +39,7 @@ async function check(chatId, repeat = true) {
           message += `    ${slot.hour}\n`
         }
       }
+      message += `Link: ${link}}\n`
     }
   } catch (e) {
     message += `An error ocurred: ${e.message}`

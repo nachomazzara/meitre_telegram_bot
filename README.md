@@ -7,7 +7,7 @@ You will need to create a `.env` file with the same variables defined in `.env.e
 - `PEOPLE_AMOUNT`: amount of people for the reservation
 - `TYPE`: `lunch` or `dinner`
 - `TELEGRAM_API_KEY`: telegram API key
-- `CHAT_ID`: the chat id. Usually the channel username or id
+- `LINK`: Link of the meitre
 - `POLLING_TIME`: Check availability each X seconds
 
 ## Telegrams
