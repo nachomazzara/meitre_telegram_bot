@@ -14,28 +14,36 @@ const bot = new TelegramBot(telegramToken, { polling: true })
 let initialized = false
 
 async function check(chatId, repeat = true) {
+  let message = ''
+
   try {
-    const res = await fetch(`http://api.meitre.com/api/calendar-availability-new/${meitreId}/${peopleAmount}/${type}`)
-    const { calendarInfo } = await res.json()
+    const dateRes = await fetch(`http://api.meitre.com/api/calendar-availability-new/${meitreId}/${peopleAmount}/${type}`)
+    const { calendarInfo } = await dateRes.json()
 
     const dates = calendarInfo.filter(date => parseInt(date.isAvailable))
-    let message = ''
 
     if (!dates.length) {
-      message = 'Nothing available yet'
+      message = 'Nothing available yet\n'
     } else {
       message = 'Availability: \n'
-      message += dates.map(({date}) => {
+      for (let {date} of dates) {
         const d = new Date(date)
-        return d.getDate() + '/' + (d.getMonth() + 1) + '/' + d.getFullYear()
-      }).join('\n')
-    }
+        const slotsRes = await fetch(
+          `https://api.meitre.com/api/search-all-hours/en/${peopleAmount}/${d.getFullYear() + '-' + (d.getMonth() + 1) + '-' + d.getDate()}/dinner/${meitreId}`
+        )
+        const slots = await slotsRes.json()
+        message += `${d.getDate()}/${(d.getMonth() + 1)}/${d.getFullYear()}\n`
 
-    await bot.sendMessage(chatId, message)
+        for (let slot of slots.center.slots) {
+          message += `    ${slot.hour}\n`
+        }
+      }
+    }
   } catch (e) {
-    console.log(`An error ocurred: ${e.message}`)
+    message += `An error ocurred: ${e.message}`
   }
 
+  await bot.sendMessage(chatId, message)
   if (repeat) {
     setTimeout(() => check(chatId), pollingTime * 1000)
   }
