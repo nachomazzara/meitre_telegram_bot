@@ -54,7 +54,7 @@ async function check(chatId, repeat = true, onlyIfPlace) {
 
 
   if (repeat) {
-    setTimeout(() => check(chatId), pollingTime * 1000)
+    setTimeout(() => check(chatId), pollingTime * 1000, onlyIfPlace)
   }
 }
 
