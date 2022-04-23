@@ -13,9 +13,9 @@ const pollingTime = parseInt(process.env.POLLING_TIME)
 const bot = new TelegramBot(telegramToken, { polling: true })
 
 let initialized = false
-let onlyIfPlace = true
+let shouldSendMessageAlways = true
 
-async function check(chatId, repeat = true, onlyIfPlace) {
+async function check(chatId, repeat = true, sendMessageAlways = shouldSendMessageAlways) {
   let message = ''
 
   try {
@@ -43,7 +43,7 @@ async function check(chatId, repeat = true, onlyIfPlace) {
       message += `\n\nLink: ${link}\n`
     }
 
-    if(!onlyIfPlace || (dates.length && onlyIfPlace)) {
+    if(sendMessageAlways || (dates.length && !sendMessageAlways)) {
       await bot.sendMessage(chatId, message)
     }
 
@@ -54,7 +54,7 @@ async function check(chatId, repeat = true, onlyIfPlace) {
 
 
   if (repeat) {
-    setTimeout(() => check(chatId), pollingTime * 1000, onlyIfPlace)
+    setTimeout(() => check(chatId), pollingTime * 1000)
   }
 }
 
@@ -66,30 +66,30 @@ function getChatId(msg) {
 bot.on('channel_post', (msg) => {
   if (!initialized) {
     initialized = true
-    check(getChatId(msg), true, onlyIfPlace)
+    check(getChatId(msg), true)
   } else if (msg.text === '/check') {
-    check(getChatId(msg), false, false)
+    check(getChatId(msg), false, true)
   }
 })
 
 bot.on('message', (msg) => {
   if (!initialized) {
     initialized = true
-    check(getChatId(msg), true, onlyIfPlace)
+    check(getChatId(msg), true)
   }
 })
 
 // Check Place
 bot.onText(/^\/check/i, (msg) => {
-  check(getChatId(msg), false, false)
+  check(getChatId(msg), false, true)
 })
 
 // Start the check polling
-bot.onText(/^\/check-only-if-place/i, (msg) => {
-  onlyIfPlace = true
+bot.onText(/^\/check-only-if-place/i, () => {
+  shouldSendMessageAlways = false
 })
 
 // Start the check polling
-bot.onText(/^\/check-always/i, (msg) => {
-  onlyIfPlace = false
+bot.onText(/^\/check-always/i, () => {
+  shouldSendMessageAlways = true
 })
