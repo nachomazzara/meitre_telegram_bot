@@ -13,7 +13,7 @@ const pollingTime = parseInt(process.env.POLLING_TIME)
 const bot = new TelegramBot(telegramToken, { polling: true })
 
 let initialized = false
-let shouldSendMessageAlways = true
+let shouldSendMessageAlways = false
 
 async function check(chatId, repeat = true, sendMessageAlways = shouldSendMessageAlways) {
   let message = ''
